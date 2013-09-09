@@ -2,25 +2,43 @@
   position: relative;
   top: 50px;
   left: 50px;
-  border:  1px solid;
+  border: 1px solid black;
+  background: black;
 }
 
 .palette > div {
   position: absolute;
-  background: red;
-  display: inline-block;
   z-index: 1;
   right: 0;
   bottom: 0;
   margin: auto;
-  border: 1px solid white;
+  border: 1px solid transparent;
   transition: 0.05s all;
+  padding: 0;
 }
 
 .palette > div:hover {
-  width: 22px!important;
-  height: 22px!important;
   background: blue;
   z-index: 2;
   border: 1px white solid;
+}
+
+.palette.no-zoom > div:hover {
+  padding: 0%;
+}
+
+.palette.low-zoom > div:hover {
+  padding: 2%;
+}
+
+.palette.medium-zoom > div:hover {
+  padding: 3%;
+}
+
+.palette.high-zoom > div:hover {
+  padding: 4%;
+}
+
+div.light:hover {
+  border: 1px solid #555;
 }
