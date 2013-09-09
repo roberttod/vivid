@@ -1,9 +1,16 @@
+.picker {
+  background: black;
+  display: inline-block;
+  padding: 5px;
+}
+
+.preview {
+  height: 30px;
+  margin-bottom: 5px;
+}
+
 .palette {
   position: relative;
-  top: 50px;
-  left: 50px;
-  border: 1px solid black;
-  background: black;
 }
 
 .palette > div {

@@ -5,6 +5,12 @@
   <title>Document</title>
   <link rel="stylesheet" href="./acid.css">
   <script src="./acid.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var picker = new Acid().render();
+      document.body.appendChild(picker.el);
+    });
+  </script>
 </head>
 <body>
   
