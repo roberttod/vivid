@@ -8,7 +8,9 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       window.picker = new Acid({
-        initialColor: "red"
+        initialColor: "red",
+        borderWidth: 1,
+        // zoom: "no"
       }).render();
       document.body.appendChild(picker.el);
       picker.on("change", function (val){
