@@ -13,31 +13,46 @@ function Acid (options) {
     size: 10,
     swatchSize: 15,
     zoom: "low",
-    borderWidth: 1
+    borderWidth: 1,
+    initialColor: "black"
   });
   this.initialize();
 }
 
 Acid.prototype = {
   initialize: function () {
+    this.handlers = {};
     this.el = document.createElement("div");
     return this;
   },
   render: function () {
     this.el.innerHTML = "";
     this.el.appendChild(this.makePicker());
+    this.setColor(this.options.initialColor);
     return this;
+  },
+  on: function (event, handler, context) {
+    this.handlers[event] = this.handlers[event] || [];
+    this.handlers[event].push(handler.bind(context || this));
+  },
+  trigger: function (event, data) {
+    if (this.handlers[event]) {
+      this.handlers[event].forEach(function (handler) {
+        handler(data);
+      });
+    }
   },
   makeSwatch: function (top, left) {
     var offset = (this.options.size * this.options.swatchSize) - this.options.swatchSize;
     var swatch = document.createElement("div");
+    var maxOffset = this.options.size - 1;
     swatch.style.left = (left * this.options.swatchSize * 2) - offset + "px";
     swatch.style.top = (top * 2 * this.options.swatchSize) - offset + "px";
     swatch.style.width = this.options.swatchSize - 2 - this.options.borderWidth + "px";
     swatch.style.height = this.options.swatchSize - 2 - this.options.borderWidth + "px";
 
     // Required to make right column centered
-    if (left === this.options.size - 1) {
+    if (left === maxOffset) {
       swatch.style.right = "-" + swatch.style.left;
       swatch.style.left = "0px";
     }
@@ -45,11 +60,11 @@ Acid.prototype = {
     // The top row is for greys
     if (top === 0) {
       var hue = 0;
-      var lightness = 100 * ((this.options.size - left) / this.options.size);
+      var lightness = 100 * ((maxOffset - left) / maxOffset);
       var saturation = "0%";
     } else {
       var hue = 360 * (left / this.options.size);
-      var lightness = 20 + ((70 * (top / this.options.size)));
+      var lightness = 20 + ((70 * (top / maxOffset)));
       var saturation = "80%";
     }
 
@@ -58,7 +73,7 @@ Acid.prototype = {
     swatch.style.backgroundColor = "hsl(" + hue + ", " + saturation + ", " + lightness + "%)";
 
     swatch.addEventListener("click", function () {
-      this.preview.style.backgroundColor = swatch.style.backgroundColor;
+      this.setColor(swatch.style.backgroundColor);
     }.bind(this));
 
     return swatch;
@@ -86,12 +101,22 @@ Acid.prototype = {
   makePicker: function () {
     this.preview = document.createElement("div");
     this.preview.className = "preview";
+    this.pointer = document.createElement("div");
+    this.pointer.className = "pointer";
     var palette = this.makePalette();
 
     var picker = document.createElement("div");
     picker.className = "picker";
+    picker.appendChild(this.pointer);
     picker.appendChild(this.preview);
     picker.appendChild(palette);
     return picker;
+  },
+  setColor: function(color) {
+    this.preview.style.backgroundColor = color;
+    this.trigger("change", this.val());
+  },
+  val: function(color) {
+    return window.getComputedStyle(this.preview).backgroundColor;
   }
 };

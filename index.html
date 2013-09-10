@@ -7,8 +7,13 @@
   <script src="./acid.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      var picker = new Acid().render();
+      window.picker = new Acid({
+        initialColor: "red"
+      }).render();
       document.body.appendChild(picker.el);
+      picker.on("change", function (val){
+        console.log(val)
+      });
     });
   </script>
 </head>

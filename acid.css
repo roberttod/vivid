@@ -1,12 +1,27 @@
 .picker {
+  position: absolute;
   background: black;
   display: inline-block;
   padding: 5px;
+  margin-top: 10px;
 }
 
 .preview {
   height: 30px;
   margin-bottom: 5px;
+}
+
+.pointer {
+  display: block;
+  position: absolute;
+  border: 10px transparent solid;
+  border-bottom: 10px black solid;
+  top: -20px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 0;
+  height: 0;
 }
 
 .palette {
