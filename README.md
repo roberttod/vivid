@@ -1,14 +1,14 @@
-acid.js
+acidjs
 ======
 
 A color picker written in pure javascript + css
-* Less than 300 lines of css + javascript
+* Less than 300 lines of code
 * No dependancies
 * Tested on Chrome and Firefox
 
 ![alt tag](https://raw.github.com/roberttod/acidjs/master/preview.png)
 
-Example usage
+### Example usage
 
 ```javascript
 
@@ -25,3 +25,9 @@ picker.on("change", function (val){
 });
 
 ```
+
+### Todo
+* Attach to input element
+* Button to use HTML5 color input
+* Add commonjs/AMD wrapper
+* Namespace CSS
