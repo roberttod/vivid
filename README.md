@@ -6,6 +6,8 @@ A color picker written in pure javascript + css
 * No dependancies
 * Tested on Chrome and Firefox
 
+![alt tag](https://raw.github.com/roberttod/acidjs/master/preview.png)
+
 Example usage
 
 ```javascript
@@ -23,4 +25,3 @@ picker.on("change", function (val){
 });
 
 ```
-
