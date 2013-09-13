@@ -10,15 +10,16 @@ A color picker written in pure javascript + css
 
 ### Example usage
 
+```html
+<input type="text" id="acid-picker" />
+```
+
 ```javascript
 
-window.picker = new Acid({
+var picker = new Acid(document.querySelector("#acid-picker"), {
   initialColor: "red",
-  borderWidth: 1,
-  zoom: "low"
-}).render();
-
-document.body.appendChild(picker.el);
+  borderWidth: 1
+});
 
 picker.on("change", function (val){
   console.log(val);
