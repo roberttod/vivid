@@ -7,12 +7,11 @@
   <script src="./acid.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      window.picker = new Acid({
+      window.picker = new Acid(document.querySelector("#acid-picker"), {
         initialColor: "red",
-        borderWidth: 1,
+        borderWidth: 1
         // zoom: "no"
-      }).render();
-      document.body.appendChild(picker.el);
+      });
       picker.on("change", function (val){
         console.log(val)
       });
@@ -20,6 +19,7 @@
   </script>
 </head>
 <body>
-  
+<div style="display:inline-block; width: 100px;"></div>
+<input type="text" id="acid-picker" />
 </body>
 </html>

@@ -27,7 +27,8 @@ picker.on("change", function (val){
 ```
 
 ### Todo
-* Attach to input element
-* Button to use HTML5 color input
-* Add commonjs/AMD wrapper
-* Namespace CSS
+* ~~Attach to input element~~
+* ~~Add commonjs/AMD wrapper~~
+* ~~Namespace CSS~~
+* Parent element collision detection option
+* RBG/HSL/HEX inputs
