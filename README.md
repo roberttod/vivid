@@ -31,5 +31,9 @@ picker.on("change", function (val){
 * ~~Attach to input element~~
 * ~~Add commonjs/AMD wrapper~~
 * ~~Namespace CSS~~
-* Parent element collision detection option
+* Custom swatch options
 * RBG/HSL/HEX inputs
+* Gradient picker with hue slider
+* Alpha slider
+* Parent element collision detection option
+* IE compatibility
