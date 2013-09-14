@@ -16,8 +16,9 @@
     input.style.display = "none";
     this.options = options || {};
     defaults(this.options, {
-      size: 10,
-      swatchSize: 15,
+      width: 12,
+      height: 10,
+      swatchSize: 14,
       zoom: "low",
       borderWidth: 1,
       initialColor: "black"
@@ -110,12 +111,13 @@
       button.className = "picker-btn";
       return button;
     },
-    makeSwatch: function (top, left) {
-      var offset = (this.options.size * this.options.swatchSize) - this.options.swatchSize;
+    makeSwatch: function (left, top, color) {
+      var offsetW = (this.options.width * this.options.swatchSize) - this.options.swatchSize;
+      var offsetH = (this.options.height * this.options.swatchSize) - this.options.swatchSize;
       var swatch = document.createElement("div");
-      var maxOffset = this.options.size - 1;
-      swatch.style.left = (left * this.options.swatchSize * 2) - offset + "px";
-      swatch.style.top = (top * 2 * this.options.swatchSize) - offset + "px";
+      var maxOffset = this.options.width - 1;
+      swatch.style.left = (left * this.options.swatchSize * 2) - offsetW + "px";
+      swatch.style.top = (top * 2 * this.options.swatchSize) - offsetH + "px";
       swatch.style.width = this.options.swatchSize - 2 - this.options.borderWidth + "px";
       swatch.style.height = this.options.swatchSize - 2 - this.options.borderWidth + "px";
 
@@ -125,20 +127,8 @@
         swatch.style.left = "0px";
       }
 
-      // The top row is for greys
-      if (top === 0) {
-        var hue = 0;
-        var lightness = 100 * ((maxOffset - left) / maxOffset);
-        var saturation = "0%";
-      } else {
-        var hue = 360 * (left / this.options.size);
-        var lightness = 20 + ((70 * (top / maxOffset)));
-        var saturation = "80%";
-      }
-
-      swatch.className = lightness > 70 ? "light" : "dark";
-
-      swatch.style.backgroundColor = "hsl(" + hue + ", " + saturation + ", " + lightness + "%)";
+      swatch.className = color.lightness > 70 ? "light" : "dark";
+      swatch.style.backgroundColor = "hsl(" + color.hue + ", " + color.saturation + ", " + color.lightness + "%)";
 
       swatch.addEventListener("click", function () {
         this.setColor(swatch.style.backgroundColor);
@@ -151,20 +141,53 @@
 
       var palette = document.createElement("div");
       palette.className = "palette " + (this.options.zoom || "no") + "-zoom";
-      palette.style.height = this.options.swatchSize * this.options.size - 1 + "px";
-      palette.style.width = this.options.swatchSize * this.options.size - 1 + "px";
+      palette.style.height = this.options.swatchSize * this.options.height - 1 + "px";
+      palette.style.width = this.options.swatchSize * this.options.width - 1 + "px";
 
-      for (; i < this.options.size; i++) {
-        j = 0;
-        swatches[i] = [];
-        for (; j < this.options.size; j++) {
-          swatches[i][j] = this.makeSwatch(i, j);
-          palette.appendChild(swatches[i][j]);
-        }
-      }
-      this.swatches = swatches;
+      this.swatches = this.makeSwatchArray(this.makeColorArray(this.options.width, this.options.height, function (proportionTop) {
+        return 0.6 * proportionTop + 0.2;
+      }), palette);
 
       return palette;
+    },
+    makeColorArray: function (width, height, fn) {
+      var colorArray = [];
+      var hueOffset = 0;
+      for (var top = 0; top < height; top++) {
+        var proportionTop = top / height;
+        colorArray[top] = [];
+        for (var left = 0; left < width; left++) {
+          var proportionLeft = left / width;
+
+          // The top row is for greys
+          if (top === 0) {
+            var hue = 0;
+            var lightness = 100 * (1 - proportionLeft);
+            var saturation = "0%";
+          } else {
+            var hue = 360 * (left / width) + hueOffset;
+            var lightness = 100 * fn(proportionTop);
+            if (left === 0) {
+              console.log(lightness);
+            }
+            var saturation = "80%";
+          }
+          colorArray[top][left] = {
+            hue: hue,
+            lightness: lightness,
+            saturation: saturation
+          };
+        }
+      }
+      return colorArray;
+    },
+    makeSwatchArray: function (colorArray, palette) {
+      return colorArray.map(function (colorRow, top) {
+        return colorRow.map(function (color, left) {
+          palette.appendChild(this.makeSwatch(left, top, color));
+          return this.makeSwatch(left, top, color);
+        }, this);
+      }, this);
     },
     makePicker: function () {
       this.preview = document.createElement("div");
