@@ -30,7 +30,7 @@
     initialize: function () {
       this.handlers = {};
       this.el = document.createElement("div");
-      this.el.className = "acid";
+      this.el.className = "acid hidden";
       this.render();
       return this;
     },
@@ -64,13 +64,13 @@
       }
     },
     show: function (noTrigger) {
-      this.el.className += " active";
+      this.el.className = this.el.className.replace(/\s*hidden\s*/, "");
       if (!noTrigger) {
         this.trigger("show");
       }
     },
     hide: function (noTrigger) {
-      this.el.className = this.el.className.replace("active", "");
+      this.el.className += " hidden";
       if (!noTrigger) {
         this.trigger("hide");
       }
@@ -83,7 +83,7 @@
       }
     },
     visible: function () {
-      return ~this.el.className.split(" ").indexOf("active");
+      return !~this.el.className.split(/\s+/).indexOf("hidden");
     },
     positionPicker: function () {
       var toggled = false;
