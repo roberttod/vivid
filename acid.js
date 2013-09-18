@@ -27,9 +27,9 @@
     },
     render: function () {
       this.el.innerHTML = "";
-      this.button = this.makeButton();
-      this.picker = this.makePicker();
-      this.overlay = this.makeOverlay();
+      this.button = this._makeButton();
+      this.picker = this._makePicker();
+      this.overlay = this._makeOverlay();
 
       this.button.addEventListener("click", this.show.bind(this));
       this.overlay.addEventListener("click", this.hide.bind(this));
@@ -39,7 +39,7 @@
       this.el.appendChild(this.overlay);
       this.input.parentNode.insertBefore(this.el, this.input);
 
-      this.positionPicker();
+      this._positionPicker();
       this.setColor(this.options.initialColor);
       return this;
     },
@@ -54,6 +54,16 @@
         });
       }
     },
+    setColor: function(color) {
+      this.preview.style.backgroundColor = color;
+      this.button.style.backgroundColor = color;
+      this.trigger("change", this.val());
+    },
+    val: function(options) {
+      var rgbString = window.getComputedStyle(this.button).backgroundColor;
+      var color = new Color(rgbString);
+      return color.get(options);
+    },
     show: function (noTrigger) {
       this.el.className = this.el.className.replace(/\s*hidden\s*/, "");
       if (!noTrigger) {
@@ -67,18 +77,18 @@
       }
     },
     toggle: function () {
-      if (this.visible()) {
+      if (this.isVisible()) {
         this.hide();
       } else {
         this.show();
       }
     },
-    visible: function () {
+    isVisible: function () {
       return !~this.el.className.split(/\s+/).indexOf("hidden");
     },
-    positionPicker: function () {
+    _positionPicker: function () {
       var toggled = false;
-      if (!this.visible()) {
+      if (!this.isVisible()) {
         toggled = true;
         this.show(true);
       }
@@ -88,23 +98,15 @@
         this.hide(true);
       }
     },
-    setColor: function(color) {
-      this.preview.style.backgroundColor = color;
-      this.button.style.backgroundColor = color;
-      this.trigger("change", this.val());
-    },
-    val: function(color) {
-      return window.getComputedStyle(this.preview).backgroundColor;
-    },
-    makeButton: function () {
+    _makeButton: function () {
       var button = document.createElement("button");
       button.type = "button";
       button.className = "picker-btn";
       return button;
     },
-    makeSwatch: function (left, top, rawColor) {
+    _makeSwatch: function (left, top, rawColor, height) {
       var offsetW = (this.options.width * this.options.swatchSize) - this.options.swatchSize;
-      var offsetH = (this.options.height * this.options.swatchSize) - this.options.swatchSize;
+      var offsetH = (height * this.options.swatchSize) - this.options.swatchSize;
       var swatch = document.createElement("div");
       var maxOffset = this.options.width - 1;
       var color = new Color(rawColor);
@@ -132,29 +134,30 @@
       var i = 0, j, swatches = [];
 
       if (!colorMatrix) {
-        colorMatrix = this.makeColorMatrix(this.options.width, this.options.height, function (proportionTop) {
+        colorMatrix = this._makeColorMatrix(this.options.width, this.options.height, function (proportionTop) {
           return 0.6 * proportionTop + 0.2;
         });
       }
 
+      var height = Math.ceil(colorMatrix.length / this.options.width);
+
       var palette = document.createElement("div");
       palette.className = "palette " + (this.options.zoom || "no") + "-zoom";
-      palette.style.height = this.options.swatchSize * this.options.height - 1 + "px";
+      palette.style.height = this.options.swatchSize * height - 1 + "px";
       palette.style.width = this.options.swatchSize * this.options.width - 1 + "px";
 
-      this.makeSwatchArray(colorMatrix, palette, this.options.width);
-      this.makeSwatchArray(this.parseColorArray(["#00ff00", "#ff0000", "#ff0000", "#0000ff", "#00ff00", "#00ff00", "#00ff00"]), palette, this.options.width);
+      this._makeSwatchArray(colorMatrix, palette, this.options.width, height);
 
       return palette;
     },
-    parseColorArray: function (colorArray) {
-      return colorArray.map(this.parseColor, this);
+    _parseColorArray: function (colorArray) {
+      return colorArray.map(this._parseColor, this);
     },
-    parseColor: function (colorString) {
+    _parseColor: function (colorString) {
       var color = new Color(colorString);
       return color.get();
     },
-    makeColorMatrix: function (width, height, fn) {
+    _makeColorMatrix: function (width, height, fn) {
       var colorArray = [];
       var hueOffset = 0;
       for (var top = 0; top < height; top++) {
@@ -184,28 +187,34 @@
       }
       return colorArray;
     },
-    makeSwatchArray: function (colorArray, palette, width) {
+    _makeSwatchArray: function (colorArray, palette, width, height) {
       return colorArray.map(function (color, position) {
         var top = Math.floor(position / width);
         var left = position % width;
-        return palette.appendChild(this.makeSwatch(left, top, color));
+        return palette.appendChild(this._makeSwatch(left, top, color, height));
       }, this);
     },
-    makePicker: function () {
+    _makePicker: function () {
       this.preview = document.createElement("div");
       this.preview.className = "preview";
       this.pointer = document.createElement("div");
       this.pointer.className = "pointer";
-      var palette = this.makePalette();
 
+
+      var palette = this.makePalette();
       var picker = document.createElement("div");
       picker.className = "picker";
       picker.appendChild(this.pointer);
-      picker.appendChild(this.preview);
+
+      if (this.options.customPalette && this.options.customPalette.length) {
+        var customPalette = this.makePalette(this._parseColorArray(this.options.customPalette));
+        customPalette.style.marginBottom = "5px";
+        picker.appendChild(customPalette);
+      }
       picker.appendChild(palette);
       return picker;
     },
-    makeOverlay: function () {
+    _makeOverlay: function () {
       var overlay = document.createElement("div");
       overlay.className = "overlay";
       return overlay;
