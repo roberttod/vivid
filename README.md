@@ -18,11 +18,24 @@ A color picker written in pure javascript + css
 
 var picker = new Acid(document.querySelector("#acid-picker"), {
   initialColor: "red",
-  borderWidth: 1
+  borderWidth: 1,
+  width: 12,
+  customPalette: [
+    "#B22222",
+    "#483D8B",
+    "#2F4F4F",
+    "#778899",
+    "#556B2F",
+    "#A52A2A",
+    "#F4A460",
+    "#1E90FF",
+    "#FFA500"
+  ],
+  zoom: "low"
 });
 
 picker.on("change", function (val){
-  console.log(val);
+  console.log(val)
 });
 
 ```
@@ -31,7 +44,8 @@ picker.on("change", function (val){
 * ~~Attach to input element~~
 * ~~Add commonjs/AMD wrapper~~
 * ~~Namespace CSS~~
-* Custom swatch options
+* ~~Custom swatch options~~
+* Embed html5 color picker
 * RBG/HSL/HEX inputs
 * Gradient picker with hue slider
 * Alpha slider
