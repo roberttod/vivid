@@ -9,7 +9,8 @@
     document.addEventListener("DOMContentLoaded", function () {
       window.picker = new Acid(document.querySelector("#acid-picker"), {
         initialColor: "red",
-        borderWidth: 1
+        borderWidth: 1,
+        customPalette: ["#B22222", "#483D8B", "#2F4F4F", "#778899", "#556B2F", "#A52A2A", "#F4A460", "#1E90FF", "#FFA500"]
         // zoom: "no"
       });
       picker.on("change", function (val){
