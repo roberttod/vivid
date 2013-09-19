@@ -12,7 +12,8 @@
       swatchSize: 14,
       zoom: "low",
       borderWidth: 1,
-      initialColor: "black"
+      initialColor: "black",
+      nativePicker: true
     });
     this.initialize();
   }
@@ -130,7 +131,7 @@
 
       return swatch;
     },
-    makePalette: function (colorMatrix) {
+    _makePalette: function (colorMatrix) {
       var i = 0, j, swatches = [];
 
       if (!colorMatrix) {
@@ -201,23 +202,55 @@
       this.pointer.className = "pointer";
 
 
-      var palette = this.makePalette();
+      var palette = this._makePalette();
       var picker = document.createElement("div");
       picker.className = "picker";
       picker.appendChild(this.pointer);
 
       if (this.options.customPalette && this.options.customPalette.length) {
-        var customPalette = this.makePalette(this._parseColorArray(this.options.customPalette));
+        var customPalette = this._makePalette(this._parseColorArray(this.options.customPalette));
         customPalette.style.marginBottom = "5px";
         picker.appendChild(customPalette);
       }
       picker.appendChild(palette);
+
+      if (this.options.nativePicker && this._colorInputSupport) {
+        var nativePickerButton = this._makeNativePickerButton();
+        picker.appendChild(nativePickerButton);
+      }
+
       return picker;
+    },
+    _makeNativePickerButton: function () {
+      var button = document.createElement("button");
+      button.className = "native-button";
+      button.innerHTML = "Show Colors";
+
+      nativePicker = document.createElement("input");
+      nativePicker.type = "color";
+      nativePicker.addEventListener("click", function() {
+        // this.hide();
+      }.bind(this));
+      nativePicker.addEventListener("change", function(e) {
+        this.setColor(nativePicker.value);
+      }.bind(this));
+
+      this.on("change", function () {
+        nativePicker.value = this.val({ format: "hex" });
+      });
+
+      button.appendChild(nativePicker);
+      return button;
     },
     _makeOverlay: function () {
       var overlay = document.createElement("div");
       overlay.className = "overlay";
       return overlay;
+    },
+    _colorInputSupport: function () {
+      var input = document.createElement("input");
+      input.type = "color";
+      return input.getAttribute("type") === "color";
     }
   };
 

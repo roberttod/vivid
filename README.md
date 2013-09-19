@@ -2,7 +2,7 @@ acidjs
 ======
 
 A color picker written in pure javascript + css
-* Less than 300 lines of code
+* Around 550 lines of code
 * No dependancies
 * Tested on Chrome and Firefox
 
@@ -45,7 +45,7 @@ picker.on("change", function (val){
 * ~~Add commonjs/AMD wrapper~~
 * ~~Namespace CSS~~
 * ~~Custom swatch options~~
-* Embed html5 color picker
+* ~~Embed html5 color picker~~
 * RBG/HSL/HEX inputs
 * Gradient picker with hue slider
 * Alpha slider

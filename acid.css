@@ -85,6 +85,40 @@
   border: 1px white solid;
 }
 
+.acid .native-button {
+  width: 100%;
+  height: 20px;
+  border: none;
+  position: relative;
+  margin-top: 5px;
+  color: rgb(197, 197, 197);
+  background-color: #3D3D3D;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
+  -webkit-transition: background-color .15s ease;
+  transition: background-color .15s ease;
+}
+
+.acid .native-button:hover {
+  background-color: #4D4D4D;
+  border-color: rgba(255, 255, 255, 0.04);
+  border-top-color: rgba(255, 255, 255, 0.14);
+}
+
+.acid input[type="color"] {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
 .acid .palette.no-zoom > div:hover {
   padding: 0%;
 }
